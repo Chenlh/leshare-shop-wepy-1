@@ -74,7 +74,12 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/shop/index',
-      'pages/home/home'
+      'pages/home/home',
+      'pages/order/trade',
+      'pages/order/list',
+      'pages/order/detail',
+      'pages/order/refund_edit',
+      'pages/order/refund_detail'
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -102,7 +107,7 @@ export default class extends wepy.app {
         {
           'iconPath': 'images/tab/order.png',
           'selectedIconPath': 'images/tab/order-active.png',
-          'pagePath': 'pages/home/home',
+          'pagePath': 'pages/order/list',
           'text': '订单'
         },
         {

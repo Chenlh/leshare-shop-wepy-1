@@ -1,0 +1,88 @@
+<template>
+  <view class="container" wx:if="{{init}}">
+    <!--TAB 页-->
+    <ZanTab :tab.sync="tab" @change.user="switchTap" />
+
+    <view class="mt10">
+      <!--列表展现-->
+      <repeat for="{{page.list}}" key="index" index="index" item="item">
+          <OrderItem :order.sync="item" @tap.user="detail"></OrderItem>
+      </repeat>
+    </view>
+
+    <!-- 加载提示 -->
+    <Loadmore :page.sync="page"/>
+  </view>
+
+  <!--占位符-->
+  <Placeholder :show.sync="isPageEmpty" message="您还没有相关订单" top="600rpx"/>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import base from '../../mixins/base';
+  import order from '../../api/order';
+  import auth from '../../api/auth';
+  import pagination from '../../mixins/pagination.wpy';
+  import Placeholder from '../../components/common/placeholder';
+  import Loadmore from '../../components/weui/loadmore';
+  import OrderItem from '../../components/order/customer_item';
+  import ZanTab from '../../components/zanui/tab';
+  import Event from '../../utils/Event';
+  // import Cache from '../../utils/Cache';
+
+  export default class OrderList extends wepy.page {
+    def = {
+      init: false,
+      page: {
+        list: [
+          {orderGoodsInfos: []}
+        ]
+      },
+      tab: {
+        list: [
+          {id: '0', title: '全部'},
+          {id: '1', title: '待付款'},
+          {id: '9', title: '待发货'},
+          {id: '3', title: '待收货'},
+          {id: '4', title: '待评价'},
+          {id: '5', title: '退货中'}
+        ],
+        selectedId: '0',
+        scroll: false
+      }
+    };
+    data = {...this.def};
+    async onLoad () {
+      // 权限校验
+      const result = await auth.user({block: true, redirect: true});
+      if (!result) return;
+      this.page = order.page();
+      // 分页加载
+      await this.next();
+      // 监听更新事件
+      Event.listen(Event.ORDER_LIST_UPDATE, this.update.bind(this), this);
+    };
+    // 获取分页参数
+    params() {
+      return { status: this.tab.selectedId };
+    }
+    methods = {
+      switchTap() {
+        this.reload();
+      }
+    };
+    events = {};
+    components = {
+      Placeholder: Placeholder,
+      Loadmore: Loadmore,
+      OrderItem: OrderItem,
+      ZanTab: ZanTab
+    };
+    mixins = [base, pagination];
+    config = {
+      navigationBarTitleText: '我的订单',
+      enablePullDownRefresh: true
+    };
+  }
+</script>
