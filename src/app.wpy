@@ -6,6 +6,7 @@
 
 <script>
 import wepy from 'wepy';
+import WxUtils from './utils/WxUtils';
 import 'wepy-async-function';
 
 export default class extends wepy.app {
@@ -16,13 +17,13 @@ export default class extends wepy.app {
     this.use('promisify');
     this.intercept('request', {
       config (p) {
-        // p.header = this.createAuthHeader();
+        p.header = this.createAuthHeader();
         return p;
       }
     });
     this.intercept('uploadFile', {
       config (p) {
-        // p.header = this.createAuthHeader();
+        p.header = this.createAuthHeader();
         return p;
       },
       success (p) {
@@ -42,18 +43,22 @@ export default class extends wepy.app {
     return header;
   }
   onLaunch(param) {
-//    // 校验SDK
-//    WxUtils.checkSDK();
-//    // 同步权限数据
-//    this.syncStoreConfig('login_code');
-//    this.syncStoreConfig('third_session');
-//    this.syncStoreConfig('user');
-//    // 获取保存场景值
-//    if (param && param.scene) {
-//      console.info('[scene]onLaunch scene', param.scene);
-//      wepy.$instance.globalData.scene = param.scene;
-//      console.info('[auth]onLaunch end');
-//    }
+    // 校验SDK
+    WxUtils.checkSDK();
+    // 同步开放平台EXT数据
+    const ext = wepy.getExtConfigSync();
+    Object.assign(wepy.$instance.globalData, ext);
+    console.info(ext);
+    // 同步权限数据
+    this.syncStoreConfig('login_code');
+    this.syncStoreConfig('third_session');
+    this.syncStoreConfig('user');
+    // 获取保存场景值
+    if (param && param.scene) {
+      console.info('[scene]onLaunch scene', param.scene);
+      wepy.$instance.globalData.scene = param.scene;
+      console.info('[auth]onLaunch end');
+    }
   }
   syncStoreConfig(key) {
     try {
