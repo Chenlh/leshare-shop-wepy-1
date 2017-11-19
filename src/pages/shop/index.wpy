@@ -6,10 +6,12 @@
     <!--功能区域-->
     <ShopNav badegText="商城" title="在线商城"  navText="个人中心" navUrl="/pages/customer/index" />
 
-    <!--列表展现-->
-    <repeat for="{{page.list}}" key="index" index="index" item="item">
-
-    </repeat>
+    <view class="goods-grid-box row-between">
+      <!--列表展现-->
+      <repeat for="{{page.list}}" key="index" index="index" item="item">
+        <GoodsItem :goods.sync="item" />
+      </repeat>
+    </view>
 
     <!-- 加载提示 -->
     <Loadmore :page.sync="page"/>
@@ -23,7 +25,6 @@
 <script>
   import wepy from 'wepy';
   import auth from '../../api/auth';
-  import shop from '../../api/shop';
   import goods from '../../api/goods';
   import base from '../../mixins/base';
   import pagination from '../../mixins/pagination.wpy';
@@ -33,10 +34,11 @@
   import Cache from '../../utils/Cache';
   import ShopHeader from '../../components/shop/header';
   import ShopNav from '../../components/shop/nav';
+  import GoodsItem from '../../components/goods/item';
 
   export default class ShopIndex extends wepy.page {
     def = {
-      init: true,
+      init: false,
       shop: null,
       page: {
         list: [
@@ -54,7 +56,7 @@
       Event.listen(Event.NOTICE_LIST_UPDATE, this.update.bind(this), this);
     };
     params() {
-      return {status: this.tab.selectedId};
+      return {};
     }
     methods = {
       switchTab() {
@@ -66,7 +68,8 @@
       Placeholder: Placeholder,
       Loadmore: Loadmore,
       ShopNav: ShopNav,
-      ShopHeader: ShopHeader
+      ShopHeader: ShopHeader,
+      GoodsItem: GoodsItem
     };
     mixins = [base, pagination];
     config = {
@@ -75,3 +78,13 @@
     };
   }
 </script>
+
+<style lang="scss">
+  @import "../../styles/variable";
+
+  .goods-grid-box{
+    margin-top: 10rpx;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+</style>
