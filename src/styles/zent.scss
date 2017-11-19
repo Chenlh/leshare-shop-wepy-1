@@ -95,3 +95,129 @@
   margin-top: 10px;
   overflow: hidden;
 }
+/*有赞-列表*/
+.zan-cell {
+  position: relative;
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  line-height: 1.4;
+  font-size: 14px;
+}
+
+.zan-cell::after {
+  position: absolute;
+  left: 15px;
+  right: 0;
+  bottom: 0;
+  border-top: 1rpx solid #e5e5e5;
+  background: #e5e5e5;
+  content: ' ';
+}
+.zan-cell__bd, .zan-cell__bd text{
+  flex: 1;
+  font-size: 30rpx;
+  color: #303030;
+}
+.zan-cell__ft {
+  position: relative;
+  text-align: right;
+  color: #303030;
+  font-size: 30rpx;
+}
+
+.zan-cell__flex{
+  display: flex;
+  align-items: center;
+  font-family: MicroSoft Yahei;
+}
+
+.zan-cell--last-child::after,
+.zan-cell:last-child::after {
+  display: none;
+}
+
+.zan-cell--access .zan-cell__ft {
+  padding-right: 13px;
+}
+
+.zan-cell--access .zan-cell__ft::after {
+  position: absolute;
+  top: 50%;
+  right: 2px;
+  content: " ";
+  display: inline-block;
+  height: 6px;
+  width: 6px;
+  border-width: 2px 2px 0 0;
+  border-color: #c8c8c8;
+  border-style: solid;
+  transform: translateY(-50%) matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+}
+.zan-cell--switch {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+
+/*有赞-徽章*/
+.zan-badge {
+  position: relative;
+}
+.zan-badge__count {
+  position: absolute;
+  top: -8px;
+  right: 0px;
+  height: 1.6em;
+  min-width: 1.6em;
+  line-height: 1.6;
+  padding: 0 .4em;
+  font-size: 10px;
+  font-family: tahoma;
+  border-radius: .8em;
+  background: #FF4444;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  transform: translateX(50%);
+  transform-origin: -10% center;
+  z-index: 10;
+  box-shadow: 0 0 0 1px #fff;
+  box-sizing: border-box;
+}
+
+/*有赞-标签*/
+.zan-label {
+  display: inline-block;
+  font-size: 12px;
+  height: 28px;
+  line-height: 28px;
+  color: #333;
+  border: 1rpx solid #999;
+  padding: 0px 10px;
+  border-radius: 2px;
+  margin-right: 10px;
+  box-sizing: border-box;
+  vertical-align: middle;
+  text-align: center;
+}
+.zan-label--primary {
+  color: #fff;
+  background: #1296db;
+  border: 1rpx solid #1296db;
+}
+.zan-label--disabled {
+  color: #cacaca;
+  background: #eee;
+  border: 1rpx solid #e5e5e5;
+}
+.zan-label--small {
+  font-size: 11px;
+  height: 20px;
+  line-height: 18px;
+  padding: 0px 3px;
+}
+.zan-label--plain.zan-label--primary {
+  color: #1296db;
+  background: #fff;
+}

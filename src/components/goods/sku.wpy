@@ -1,0 +1,32 @@
+<template>
+  <!-- 规格选择器 -->
+  <!--TODO 重构为WEUI 样式-->
+  <view class="zan-cell zan-cell--access" @tap="tap" wx:if="{{sku.exists}}">
+    <view class="zan-cell__bd"><text>选择：{{sku.isReady ? sku.skuValues : sku.skuKeys}}</text></view>
+    <view class="zan-cell__ft"></view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class GoodsSku extends wepy.component {
+    props = {
+      sku: {}
+    };
+    methods = {
+      tap() {
+        this.$emit('tap', 'buy');
+      }
+    };
+  }
+</script>
+
+<style lang="scss">
+  @import "../../styles/variable";
+  .goods-sku-selector{
+    margin-top: 0rpx;
+  }
+  .goods-sku-selector text{
+    font-size: 28rpx;
+  }
+</style>

@@ -1,0 +1,137 @@
+<template>
+  <view class="buy-bar-container">
+
+    <view class="bar-action-container" data-fav='{{bar.fav}}' catchtap="onLikeTap">
+      <image class="icon" src="/images/icons/like-{{bar.fav ? 'red' : 'gray'}}.png" />
+      <text>{{bar.fav ? '已收藏': '收藏' }}</text>
+    </view>
+
+    <view class="gap-v"></view>
+
+    <view class="bar-action-container" catchtap="onToCartTap">
+      <view class="zan-badge">
+        <image class="icon" src="/images/icons/cart-gray.png" />
+        <!--TODO 重构为WEUI 样式-->
+        <view class="zan-badge__count">{{bar.num}}</view>
+      </view>
+      <text>购物车</text>
+    </view>
+    <block wx:if="{{bar.status}}">
+      <view class="bar-cart-container" @tap="buy('cart')">
+        <text>加入购物车</text>
+      </view>
+      <view class="bar-buy-container" @tap="buy('buy')">
+        <text>立即购买</text>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="bar-close-container" @tap="buy('close')">
+        <text>未营业</text>
+      </view>
+    </block>
+
+  </view>
+
+  <!--底栏占位-->
+  <view class="goods-index-footer"></view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class GoodsBar extends wepy.component {
+    props = {
+      bar: {}
+    };
+    data = {};
+    methods = {
+      buy(type) {
+        this.$emit('buy', type);
+      }
+    };
+    events = {};
+    onLoad() {
+    }
+  }
+</script>
+
+<style lang="scss">
+  .goods-index-footer{
+    height: 100rpx;
+    width: 100%;
+  }
+  @import "../../styles/variable";
+  /*
+* 底部购买栏样式
+*/
+  .buy-bar-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    height: 100rpx;
+    width: 100%;
+    background-color: #FEFEFE;
+    border-top: 1px solid #E6E8EB;
+    z-index: 100;
+  }
+
+  /*购买/加入购物车*/
+  .bar-buy-container{
+    background-color: #1296db;
+    text-align: center;
+    height: 100%;
+    width: 35%;
+  }
+  .bar-cart-container{
+    background-color: #49a9ee;
+    text-align: center;
+    height: 100%;
+    width: 35%;
+  }
+  .bar-close-container{
+    background-color: #B0B0B0;
+    text-align: center;
+    height: 100%;
+    width: 70%;
+  }
+  .bar-buy-container text,.bar-cart-container text,.bar-close-container text{
+    font-size: 32rpx;
+    line-height: 100rpx;
+    color: #FFF;
+  }
+
+  /*收藏/购物车按钮*/
+  .bar-action-container{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    width: 15%;
+    padding-left: 10rpx;
+  }
+  .bar-action-container text{
+    margin-top: 8rpx;
+    font-size: 22rpx;
+  }
+
+  /*竖线*/
+  .gap-v{
+    height: 70%;
+    width: 1px;
+    background-color: #e5e5e5;
+  }
+
+  /*调整购物车徽章位置*/
+  .zan-badge {
+    height: 45rpx;
+
+  }
+  .zan-badge__count{
+    top:-6px;
+    right: -5px;
+  }
+</style>

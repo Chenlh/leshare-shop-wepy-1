@@ -1,0 +1,136 @@
+<template>
+  <view wx:if="{{init}}">
+    <!--商品基本信息/ TODO 信息整理-->
+    <GoodsInfo :goods.sync="goods" :sku.sync="sku"/>
+
+    <!--操作栏目-->
+    <view class="zan-panel goods-operate-container">
+      <!--SKU栏-->
+      <GoodsSku :sku.sync="sku" @tap.user="buy"/>
+      <!--领券栏-->
+      <GoodsCoupon :shelf.sync="shelf" />
+      <!--评价栏-->
+      <GoodsComment :comment.sync="comment" />
+    </view>
+
+    <view class="mt10"></view>
+    <!--详情信息-->
+    <GoodsDetail :goods.sync="goods" />
+
+    <!--底部购物栏-->
+    <GoodsBar :bar.sync="bar" @buy.user="buy" />
+
+    <!--购物规格面板 / TODO 信息整理-->
+    <GoodsPanel  :goods.sync="goods" :sku.sync="sku" :status.sync="status"
+                 @select.user="selectSku" @close.user="closeSku"/>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import goods from '../../api/goods';
+  import base from '../../mixins/base';
+  import Cache from '../../utils/Cache';
+  import comment from '../../api/comment';
+  import Sku from '../../utils/Sku';
+  import GoodsInfo from '../../components/goods/info';
+  import GoodsSku from '../../components/goods/sku';
+  import GoodsCoupon from '../../components/goods/coupon';
+  import GoodsComment from '../../components/goods/comment';
+  import GoodsDetail from '../../components/goods/detail';
+  import GoodsBar from '../../components/goods/buy-bar';
+  import GoodsPanel from '../../components/goods/buy-panel';
+  // import Tips from '../../utils/Tips';
+
+  export default class GoodsIndex extends wepy.page {
+    def = {
+      init: false,
+      goods: null,
+      sku: null,
+      shop: null,
+      shelf: null,
+      status: null,
+      comment: null,
+      fav: false,
+      num: 0
+    }
+    skuManager = null;
+    data = {...this.def};
+    async onLoad ({goodsId}) {
+      this.goods = await goods.getInfo(goodsId);
+      this.skuManager = new Sku(this.goods);
+      this.shop = await Cache.shop();
+      this.shelf = await Cache.coupon();
+      this.status = await Cache.status();
+      this.comment = await comment.count(goodsId);
+      this.loaded();
+    };
+    methods = {
+      // 点击购买按钮
+      buy(type) {
+        if (type == 'close') {
+          // 处理没开门的情况
+        } else {
+          this.skuManager.action = type;
+          this.skuManager.display = true;
+        }
+      },
+      // 选择SKU
+      selectSku(key, value) {
+        this.skuManager.select(key, value);
+      },
+      // 关闭SKU
+      closeSku() {
+        this.skuManager.display = false;
+      }
+    };
+    computed = {
+      sku() {
+        if (this.skuManager == null) {
+          return;
+        }
+        return this.skuManager.export();
+      },
+      skuPanelDisplay() {
+        if (this.skuManager == null) {
+          return;
+        }
+        return this.skuManager.display;
+      },
+      bar() {
+        if (!this.init) {
+          return;
+        }
+        return {
+          status: this.status.open,
+          num: 0,
+          fav: false
+        }
+      }
+    }
+    events = {};
+    components = {
+      GoodsInfo: GoodsInfo,
+      GoodsSku: GoodsSku,
+      GoodsCoupon: GoodsCoupon,
+      GoodsComment: GoodsComment,
+      GoodsDetail: GoodsDetail,
+      GoodsBar: GoodsBar,
+      GoodsPanel: GoodsPanel
+    };
+    mixins = [base];
+    config = {
+      navigationBarTitleText: '商品详情'
+    };
+  }
+</script>
+
+<style lang="scss">
+  @import "../../styles/variable";
+  .goods-index-container{
+    background-color: #F2F2F2;
+  }
+  .goods-operate-container{
+    margin-top: 0;
+  }
+</style>

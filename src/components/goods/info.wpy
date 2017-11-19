@@ -1,0 +1,122 @@
+<template>
+  <view class="goods-info-conatiner">
+    <!-- 轮播图 -->
+    <swiper class="goods-swiper" indicator-dots="true" autoplay="true" interval="5000" catchtap="preview">
+      <block wx:for="{{goods.images}}" wx:key="id">
+        <swiper-item>
+          <image src="{{item.url}}" mode="aspectFill"></image>
+        </swiper-item>
+      </block>
+    </swiper>
+
+    <!-- 销量窗口(浮动) -->
+    <view class="goods-sales-container">
+      <text>销量: {{goods.salesVolume}}</text>
+    </view>
+
+    <view class="hr-light"></view>
+
+    <!--标题栏-->
+    <view class="goods-title-container">
+      <text class="goods-info-title">{{goods.name}}</text>
+    </view>
+
+    <!--价格栏-->
+    <view class="goods-price-container">
+      <view>
+        <text class="goods-info-price" wx:if="{{sku.exists}}">￥ {{sku.isReady ? sku.detail.price: goods.priceLable}}</text>
+        <text class="goods-info-price" wx:else>￥ {{goods.sellPrice}}</text>
+      </view>
+      <text class="goods-post-fee-text">{{goods.feeText}}</text>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class GoodsInfo extends wepy.component {
+    props = {
+      goods: {},
+      sku: {}
+    };
+    data = {};
+    methods = {};
+    events = {};
+    onLoad() {
+    }
+  }
+</script>
+
+<style lang="scss">
+  @import "../../styles/variable";
+  .goods-info-conatiner{
+    background-color: #FFF;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .goods-swiper{
+    height: 750rpx;
+    width: 750rpx;
+  }
+
+  .goods-swiper image{
+    width:100%;
+    height:750rpx;
+  }
+
+  .goods-sales-container{
+    position: absolute;
+    top: 690rpx;
+    right: 0rpx;
+    height: 60rpx;
+    width: 180rpx;
+    text-align: center;
+    color: #FFF;
+    background-color: #1296db;
+    -webkit-filter: opacity(.7);
+  }
+  .goods-sales-container text{
+    line-height: 60rpx;
+    font-size: 28rpx;
+    color: #FFF;
+  }
+
+  .goods-title-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 20rpx 10rpx 0rpx 20rpx;
+  }
+
+  .goods-info-title{
+    color: #333;
+    font-size: 32rpx;
+  }
+
+
+  .goods-price-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 80rpx;
+    padding-left: 20rpx;
+  }
+  .goods-info-price{
+    font-size:38rpx;
+    color:#ff6200;
+  }
+
+  .goods-item-price-original{
+    margin-left: 20rpx;
+    text-decoration: line-through;
+    color:#999;
+  }
+
+  /*运费*/
+  .goods-post-fee-text{
+    margin-right: 20rpx;
+  }
+
+</style>
