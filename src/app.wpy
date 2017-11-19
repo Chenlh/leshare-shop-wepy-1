@@ -73,6 +73,7 @@ export default class extends wepy.app {
   }
   config = {
     pages: [
+      'pages/shop/index',
       'pages/home/home'
     ],
     window: {
@@ -89,7 +90,7 @@ export default class extends wepy.app {
         {
           'iconPath': 'images/tab/home.png',
           'selectedIconPath': 'images/tab/home-active.png',
-          'pagePath': 'pages/home/home',
+          'pagePath': 'pages/shop/index',
           'text': '店铺'
         },
         {
@@ -114,7 +115,12 @@ export default class extends wepy.app {
     }
   };
   globalData = {
-    baseUrl: 'http://106.14.195.68:9999/v1/customer'
+    auth: {
+    },
+    scene: '',
+    shopType: null,
+    app_code: null,
+    baseUrl: 'http://106.14.195.68:9999/v2/customer'
   }
 }
 </script>

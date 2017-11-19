@@ -1,0 +1,114 @@
+<template>
+
+  <view class="goods-item-container" catchtap="onGoodsItemTap" data-goods-id="{{goods.id}}">
+    <!--商品图片-->
+    <image class="goods-item-image" src="{{goods.imageUrl}}" mode="aspectFill" onerror="this.src='/images/goods/broken.png'" />
+    <image class="recommend-image" wx:if="{{goods.isRecommend == 1}}" src="/images/icons/recommend.png" />
+    <!-- 销量窗口(浮动) -->
+    <view class="goods-sales-container">
+      <text>销量 {{goods.salesVolume}}</text>
+    </view>
+
+    <!--商品描述-->
+    <view class="goods-item-describe">
+      <!--标题-->
+      <text class="goods-item-title">{{goods.name}}</text>
+      <!--价格区域-->
+      <view class="goods-item-price">
+        <text class="goods-item-price-cost">￥{{goods.priceLable}}</text>
+        <!--<text class="goods-item-price-original">￥{{originalPrice}}</text>-->
+      </view>
+      <image class="cart-image" catchtap='onAddCartTap' data-goods-id="{{id}}"  src="/images/icons/cart-btn.png" />
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class GoodsItem extends wepy.component {
+    props = {
+      goods: {}
+    };
+    data = {};
+    methods = {};
+    events = {};
+    onLoad() {
+    }
+  }
+</script>
+
+<style lang="scss">
+  @import "../../styles/variable";
+  .goods-item-container{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-bottom: 10rpx;
+    width: 370rpx;
+    background-color: #FFF;
+  }
+  .goods-item-image{
+    height: 370rpx;
+    width: 370rpx;
+  }
+
+  .goods-item-describe{
+    height: 100rpx;
+    margin-top: 10rpx;
+    padding: 0 20rpx;
+  }
+
+  .goods-item-title{
+    font-size: 28rpx;
+    text-overflow: ellipsis;
+    word-break:keep-all;/* 不换行 */
+    white-space:nowrap;/* 不换行 */
+    overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+    color:#262626;
+  }
+
+  .goods-item-price-cost{
+    font-size: 33rpx;
+    color:#ff6200;
+  }
+
+  .goods-item-price-original{
+    margin-left: 15rpx;
+    text-decoration: line-through;
+    color:#999;
+  }
+
+  .recommend-image{
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 0;
+    right: 0;
+  }
+
+  .goods-sales-container{
+    position: absolute;
+    padding: 3px 8px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    min-width: 50px;
+    right: 0;
+    bottom: 110rpx;
+    background-color: #1296db;
+    -webkit-filter: opacity(.9);
+  }
+  .goods-sales-container text{
+    color: #FFF;
+  }
+
+  .cart-image{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    bottom: 5px;
+    right: 5px;
+  }
+</style>
