@@ -5,14 +5,7 @@
   <AddressList :goodsList.sync="goodsList" :display.sync="isAddressListDisplay"/>
 
   <view class="container" wx:if="{{init}}">
-    <!--地址栏/外卖情况更彰显-->
-    <block wx:if="{{trade.orderType == '20'}}">
-      <AddressSelector :address.sync="selectedAddress" @select.user="address" />
-    </block>
-    <block wx:else>
-      <InShopTab @tap.user="switchInShopType" />
-    </block>
-
+    <AddressSelector :address.sync="selectedAddress" @select.user="address" />
 
     <view class="mt10"></view>
 
@@ -22,21 +15,12 @@
     <!--订单详情-->
     <view class="weui-cells weui-cells_after-title weui-cells-merge-top" >
 
-      <!--堂食才有预约时间-->
-      <view class="weui-cell weui-cell_access" @tap="arriveTime" wx:if="{{trade.orderType != '20'}}">
-        <view class="weui-cell__bd">预约时间</view>
-        <text class="weui-cell__ft weui-cell__ft_in-access">{{trade.arriveTime}} </text>
-      </view>
-
-
-      <!--外卖才能在线支付-->
       <view class="weui-cell weui-cell_access" @tap="paymentType">
         <view class="weui-cell__bd">支付方式</view>
-        <view class="weui-cell__ft {{shop.offPay == 1 && trade.orderType == '20' ? 'weui-cell__ft_in-access' : ''}}">{{trade.paymentText}}</view>
+        <view class="weui-cell__ft {{shop.offPay == 1 ? 'weui-cell__ft_in-access' : ''}}">{{trade.paymentText}}</view>
       </view>
 
-      <!--外卖才有配送方式-->
-      <view class="weui-cell weui-cell_access" @tap="delivery" wx:if="{{trade.orderType == '20'}}">
+      <view class="weui-cell weui-cell_access" @tap="delivery">
         <view class="weui-cell__bd">配送方式</view>
         <text class="weui-cell__ft {{delilveryCount > 1 ? 'weui-cell__ft_in-access' : ''}}">{{delilveryText}} </text>
       </view>
@@ -177,12 +161,10 @@
       // 订单数据
       this.trade = preload.trade;
       this.goodsList = this.trade.orderGoodsInfos;
-      if (this.trade.orderType == '20') {
-        // 默认地址
-        this.selectedAddress = await address.defaultAvailable(this.trade.orderGoodsInfos);
-        // 处理配送方式
-        await this.updateDelivery();
-      }
+      // 默认地址
+      this.selectedAddress = await address.defaultAvailable(this.trade.orderGoodsInfos);
+      // 处理配送方式
+      await this.updateDelivery();
       // 可用卡券
       this.coupons = await coupon.available(this.trade.orderGoodsInfos);
       // 店铺信息
@@ -261,7 +243,7 @@
        * 选择付款方式
        */
       async paymentType () {
-        if (this.shop.offPay == 0 || this.trade.orderType != '20') {
+        if (this.shop.offPay == 0) {
           return;
         }
         const trade = this.trade;
@@ -320,7 +302,8 @@
           Tips.loaded();
           Event.emit(Event.COUPON_LIST_UPDATE);
         }
-        WxUtils.backOrRedirect('/pages/customer/index');
+        this.$switch('/pages/order/list');
+        // WxUtils.backOrRedirect('/pages/customer/index');
       }
     };
     /**
@@ -433,27 +416,22 @@
         let confirmStatus = false;
         let deliveryText = '暂不支持配送';
         let confirmText = '立即下单';
-        const orderType = this.trade.orderType;
-        if (orderType != '20') {
+        // const orderType = this.trade.orderType;
+        if (!this.selectedAddress) {
+          deliveryText = '请选择收货地址';
+          confirmText = '请选择地址';
+        } else if (this.delilveries.length < 1) {
+          confirmText = deliveryText = '暂不支持配送';
+        } else if (!this.selectedDelivery) {
+          confirmText = deliveryText = '请选择配送方式';
+        } else if (this.selectedDelivery.limitPrice > this.trade.dealPrice) {
+          deliveryText = `${this.selectedDelivery.name} 起送价￥${this.selectedDelivery.limitPrice}`;
+          confirmText = `起送价￥${this.selectedDelivery.limitPrice}`;
+        } else {
+          const fee = this.selectedDelivery.fee > 0 ? `￥${this.selectedDelivery.fee}` : '免配送费';
+          deliveryText = `${this.selectedDelivery.name} ${fee}`;
           confirmStatus = true;
           confirmText = '立即下单';
-        } else {
-          if (!this.selectedAddress) {
-            deliveryText = '请选择收货地址';
-            confirmText = '请选择地址';
-          } else if (this.delilveries.length < 1) {
-            confirmText = deliveryText = '暂不支持配送';
-          } else if (!this.selectedDelivery) {
-            confirmText = deliveryText = '请选择配送方式';
-          } else if (this.selectedDelivery.limitPrice > this.trade.dealPrice) {
-            deliveryText = `${this.selectedDelivery.name} 起送价￥${this.selectedDelivery.limitPrice}`;
-            confirmText = `起送价￥${this.selectedDelivery.limitPrice}`;
-          } else {
-            const fee = this.selectedDelivery.fee > 0 ? `￥${this.selectedDelivery.fee}` : '免配送费';
-            deliveryText = `${this.selectedDelivery.name} ${fee}`;
-            confirmStatus = true;
-            confirmText = '立即下单';
-          }
         }
         // 刷新视图
         this.confirmStatus = confirmStatus;

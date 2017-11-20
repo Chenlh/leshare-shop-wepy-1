@@ -405,7 +405,8 @@ export default class order extends base {
    * 处理订单地址
    */
   static _processOrderAddress (order, address) {
-    if (order.orderType == '20') {
+    // TODO 订单差异处理
+    if (order.orderType == '20' || order.orderType == '10') {
       order.receiveName = `${address.name} ${address.sexText}`;
       order.receivePhone = address.phone;
       order.address = address.fullAddress;

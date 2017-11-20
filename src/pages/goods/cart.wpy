@@ -50,7 +50,7 @@
           <text class="cart-check-tips-text">不含运费，已优惠￥0.00</text>
         </view>
 
-        <view class="bar-buy-container {{cart.buy ? '' : 'bar-buy-empty'}}" catchtap="onBuyTap">
+        <view class="bar-buy-container {{cart.buy ? '' : 'bar-buy-empty'}}" @tap="buy">
           <text class="text-btn" wx:if="{{cart.buy}}">去结算</text>
           <text class="text-btn" wx:elif="{{!status.open}}">未营业</text>
           <text class="text-btn" wx:else>请选购</text>
@@ -66,6 +66,8 @@
 <script>
   import wepy from 'wepy';
   import base from '../../mixins/base';
+  import order from '../../api/order';
+  import auth from '../../api/auth';
   import Cart from '../../utils/Cart';
   import CartItem from '../../components/goods/cart';
   import Cache from '../../utils/Cache';
@@ -75,7 +77,7 @@
     def = {
       init: false,
       shop: null,
-      status: null,
+      status: null
     };
     data = {...this.def};
     cartManager = Cart.create();
@@ -113,6 +115,18 @@
         this.cartManager.removeChecked();
         await Tips.success('删除成功');
         this.$apply();
+      },
+      // 购物车结算
+      async buy (param = {}) {
+        // 权限校验
+        const result = await auth.user({block: true, redirect: false});
+        if (!result) return;
+        // 订单类型
+        param.orderType = 10;
+        const trade = order.createCartTrade(this.cartManager.carts, param);
+        // shop.reportFormId(param.formId);
+        this.$preload('trade', trade);
+        this.$navigate(`../order/trade`);
       }
     };
     computed = {

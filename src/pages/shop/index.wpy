@@ -44,7 +44,7 @@
         list: [
         ]
       }
-    }
+    };
     data = {...this.def};
     async onLoad (options) {
       // -- 用户信息
