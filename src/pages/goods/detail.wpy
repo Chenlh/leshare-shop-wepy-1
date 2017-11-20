@@ -121,7 +121,7 @@
         if (!this.init || this.cartManager == null) return;
         return {
           status: this.status.open,
-          num: this.cartManager.num,
+          num: this.cartManager.count,
           fav: false
         }
       }

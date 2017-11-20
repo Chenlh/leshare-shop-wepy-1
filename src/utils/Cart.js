@@ -70,7 +70,6 @@ export default class Cart {
   limit () {
     return Number(this.price) < Number(this.limitPrice);
   }
-
   /**
    * 初始化数据
    */
@@ -216,8 +215,10 @@ export default class Cart {
     let all = this.carts.length > 0;
     let price = 0;
     let num = 0;
+    let count = 0;
     for (let i in this.carts) {
       const cart = this.carts[i];
+      count += cart.goodsNum;
       if (!cart.check) {
         all = false;
         continue;
@@ -229,6 +230,7 @@ export default class Cart {
     this.all = all;
     this.num = num;
     this.price = price;
+    this.count = count;
     // 购物车为空的情况处理
     if (this.carts.length == 0) {
       this.batch = false;
