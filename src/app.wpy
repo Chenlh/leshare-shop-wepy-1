@@ -84,7 +84,10 @@ export default class extends wepy.app {
       'pages/order/detail',
       'pages/order/refund_edit',
       'pages/order/refund_detail',
-      'pages/customer/index'
+      'pages/customer/index',
+      'pages/customer/address_edit',
+      'pages/customer/address_list',
+      'pages/customer/address_search'
     ],
     window: {
       backgroundTextStyle: 'dark',
