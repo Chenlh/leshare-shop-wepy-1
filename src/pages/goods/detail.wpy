@@ -18,7 +18,8 @@
     <GoodsDetail :goods.sync="goods" />
 
     <!--底部购物栏-->
-    <GoodsBar :bar.sync="bar" @buy.user="buy" />
+    <GoodsBar :bar.sync="bar"
+              @buy.user="buy" @fav.user="fav"/>
 
     <!--购物规格面板 / TODO 信息整理-->
     <GoodsPanel  :goods.sync="goods" :sku.sync="sku" :status.sync="status"
@@ -32,6 +33,7 @@
   import base from '../../mixins/base';
   import Cache from '../../utils/Cache';
   import comment from '../../api/comment';
+  import favorite from '../../api/favorite';
   import Sku from '../../utils/Sku';
   import Cart from '../../utils/Cart';
   import GoodsInfo from '../../components/goods/info';
@@ -70,6 +72,9 @@
       this.status = await Cache.status();
       // 商品评论
       this.comment = await comment.count(goodsId);
+      // 收藏
+      const {isFavorite} = await favorite.is(goodsId);
+      this.fav = isFavorite == 1;
       this.loaded();
     };
     methods = {
@@ -81,6 +86,18 @@
           this.skuManager.action = type;
           this.skuManager.display = true;
         }
+      },
+      // 切换收藏
+      async fav(isFav) {
+        if (isFav) {
+          await favorite.remove(this.goods.id);
+          Tips.success('已取消');
+        } else {
+          await favorite.add(this.goods.id);
+          Tips.success('已收藏');
+        }
+        this.fav = !this.fav;
+        this.loaded();
       },
       // 选择SKU
       selectSku(key, value) {
@@ -122,7 +139,7 @@
         return {
           status: this.status.open,
           num: this.cartManager.count,
-          fav: false
+          fav: this.fav
         }
       }
     };

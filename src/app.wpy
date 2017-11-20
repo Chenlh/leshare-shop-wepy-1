@@ -81,7 +81,8 @@ export default class extends wepy.app {
       'pages/order/list',
       'pages/order/detail',
       'pages/order/refund_edit',
-      'pages/order/refund_detail'
+      'pages/order/refund_detail',
+      'pages/customer/index'
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -115,7 +116,7 @@ export default class extends wepy.app {
         {
           'iconPath': 'images/tab/user.png',
           'selectedIconPath': 'images/tab/user-active.png',
-          'pagePath': 'pages/home/home',
+          'pagePath': 'pages/customer/index',
           'text': '我的'
         }
       ]

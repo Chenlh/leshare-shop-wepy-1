@@ -44,6 +44,15 @@ export const ACTIONS = {
   }
 };
 export const ACTION_MAP = {
+  // TODO 状态字典需要统一考虑
+  // 外卖（线下）
+  '10-0-2': [ACTIONS.CLOSE],
+  '10-0-4': [ACTIONS.COMMENT],
+  // 外卖（线上）
+  '10-1-1': [ACTIONS.CLOSE, ACTIONS.PAYMENT],
+  '10-1-2': [ACTIONS.REFUND],
+  '10-1-4': [ACTIONS.COMMENT],
+  '10-1-5': [ACTIONS.UNREFUND],
   // 外卖（线下）
   '20-0-2': [ACTIONS.CLOSE],
   '20-0-4': [ACTIONS.COMMENT],

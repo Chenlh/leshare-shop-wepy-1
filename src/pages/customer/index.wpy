@@ -1,0 +1,152 @@
+<template>
+  <view class="user-conatiner">
+
+    <!-- 头图区域 -->
+    <view class="user-info-container">
+      <image class="user-avatar" src="{{user.avatarUrl}}" />
+      <text class="user-nickname">{{user.nickName}}</text>
+    </view>
+
+    <view class="zan-panel">
+      <navigator class="zan-cell zan-cell--access" url="/pages/address/index/index">
+        <view class="zan-cell__bd">
+          <image src="/images/icons/address.png" />
+          <text>收货地址</text>
+        </view>
+        <view class="zan-cell__ft"></view>
+      </navigator>
+      <navigator class="zan-cell zan-cell--access" url="/pages/goods/favorite/favorite">
+        <view class="zan-cell__bd">
+          <image src="/images/icons/like-empty.png" />
+          <text>我的收藏</text>
+        </view>
+        <view class="zan-cell__ft"></view>
+      </navigator>
+      <navigator class="zan-cell zan-cell--access" url="/pages/goods/history/history">
+        <view class="zan-cell__bd">
+          <image src="/images/icons/history.png" />
+          <text>浏览历史</text>
+        </view>
+        <view class="zan-cell__ft"></view>
+      </navigator>
+      <navigator class="zan-cell zan-cell--access" url="/pages/coupon/index/index">
+        <view class="zan-cell__bd">
+          <image src="/images/icons/cuppon.png" />
+          <text>优惠券</text>
+        </view>
+        <view class="zan-cell__ft"></view>
+      </navigator>
+      <view class="zan-cell zan-cell--access"  catchtap="tips">
+        <view class="zan-cell__bd">
+          <image src="/images/icons/vip.png" />
+          <text>会员卡</text>
+        </view>
+        <view class="zan-cell__ft"></view>
+      </view>
+    </view>
+    <view class="weui-footer">
+      <view class="weui-footer__links">
+        <navigator url="/pages/shop/contact/contact" class="weui-footer__link">乐享启创提供技术支持</navigator>
+      </view>
+      <view class="weui-footer__text">Copyright © 2017 leshare.shop</view>
+    </view>
+
+    <!--底部边线-->
+    <view class="footer-line"></view>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import base from '../../mixins/base';
+  // import Tips from '../../utils/Tips';
+
+  export default class CustomerIndex extends wepy.page {
+    data = {
+      user: null
+    };
+    onLoad () {
+      this.user = wepy.getStorageSync('user');
+    };
+    events = {};
+    components = {};
+    mixins = [base];
+    config = {
+      navigationBarTitleText: '订单详情'
+    };
+  }
+</script>
+
+<style lang="scss">
+  @import "../../styles/variable";
+  page{
+    height: 100%;
+    background-color: #f2f2f2;
+  }
+
+  /*用户信息*/
+  .user-info-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 300rpx;
+    background-color: #1296db;
+  }
+  .user-avatar{
+    height:160rpx;
+    width: 160rpx;
+    border-radius: 50%;
+  }
+
+  .user-nickname{
+    color: white;
+    font-size: 40rpx;
+  }
+
+  /*列表*/
+  .zan-cell__bd{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .zan-cell__bd image{
+    height: 46rpx;
+    width: 46rpx;
+    margin-right: 25rpx;
+    vertical-align: middle;
+  }
+
+  /*底部边线*/
+  .footer-line{
+    position: fixed;
+    height: 1px;
+    width: 100%;
+    background-color: #E6E8EB;
+    bottom: 0px;
+  }
+
+  .user-func-container{
+    display: flex;
+    flex-direction: column;
+    background-color: #FFF;
+    margin-top: 20rpx;
+    padding: 10rpx;
+  }
+
+  .user-func-item{
+    display: flex;
+    font-size: 30rpx;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 20rpx;
+  }
+  .func-text{
+    font-size: 30rpx;
+    line-height: 60rpx;
+  }
+
+  .weui-footer{margin-top:30rpx; color:#999;font-size:14px;text-align:center}.weui-footer_fixed-bottom{position:fixed;bottom:.52em;left:0;right:0}.weui-footer__links{font-size:0}.weui-footer__link{display:inline-block;vertical-align:top;margin:0 .62em;position:relative;font-size:14px;color:#586c94}.weui-footer__link:before{content:" ";position:absolute;left:0;top:0;width:1px;bottom:0;border-left:1rpx solid #c7c7c7;color:#c7c7c7;left:-.65em;top:.36em;bottom:.36em}.weui-footer__link:first-child:before{display:none}.weui-footer__text{padding:0 .34em;font-size:12px}
+</style>

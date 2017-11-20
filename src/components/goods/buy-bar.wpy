@@ -1,7 +1,7 @@
 <template>
   <view class="buy-bar-container">
 
-    <view class="bar-action-container" data-fav='{{bar.fav}}' catchtap="onLikeTap">
+    <view class="bar-action-container" data-fav='{{bar.fav}}' @tap="fav">
       <image class="icon" src="/images/icons/like-{{bar.fav ? 'red' : 'gray'}}.png" />
       <text>{{bar.fav ? '已收藏': '收藏' }}</text>
     </view>
@@ -49,6 +49,9 @@
       },
       cart() {
         this.$root.$switch('/pages/goods/cart');
+      },
+      fav() {
+        this.$emit('fav', this.bar.fav);
       }
     };
   }
