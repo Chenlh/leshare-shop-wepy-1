@@ -52,8 +52,8 @@
 
         <view class="bar-buy-container {{cart.buy ? '' : 'bar-buy-empty'}}" catchtap="onBuyTap">
           <text class="text-btn" wx:if="{{cart.buy}}">去结算</text>
-          <text class="text-btn" wx:elif="{{!cart.open}}">未营业</text>
-          <text class="text-btn" wx:else>￥{{cart.limitPrice}} 起送</text>
+          <text class="text-btn" wx:elif="{{!status.open}}">未营业</text>
+          <text class="text-btn" wx:else>请选购</text>
           <text class="text-small" wx:if="{{cart.buy}}">({{cart.num}})</text>
         </view>
       </block>
@@ -74,12 +74,14 @@
   export default class GoodsCart extends wepy.page {
     def = {
       init: false,
-      shop: null
+      shop: null,
+      status: null,
     };
     data = {...this.def};
     cartManager = Cart.create();
     async onLoad (options) {
       this.shop = await Cache.shop();
+      this.status = await Cache.status();
       this.loaded();
     };
     methods = {

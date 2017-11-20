@@ -52,7 +52,8 @@ export default class Cart {
       batch: this.batch,
       limitPrice: this.limitPrice,
       open: this.open,
-      buy: Number(this.price) >= Number(this.limitPrice) && this.num > 0 && this.open
+      // buy: Number(this.price) >= Number(this.limitPrice) && this.num > 0 && this.open
+      buy: this.num > 0
     };
   }
 
