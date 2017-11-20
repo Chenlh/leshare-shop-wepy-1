@@ -137,6 +137,23 @@ export default class Cart {
     this.save();
   }
   /**
+   * 移除一个购物车项目
+   */
+  remove (index) {
+    if (this.carts.length >= index + 1) {
+      this.carts.splice(index, 1);
+      this.save();
+    }
+  }
+
+  /**
+   * 移除所有被选中的项目
+   */
+  removeChecked() {
+    this.carts = this.carts.filter(item => item.check == false);
+    this.save();
+  }
+  /**
    * 更新商品数量
    */
   updateNum (index, num) {
@@ -163,6 +180,19 @@ export default class Cart {
   toggleAllCheck () {
     this.all = !this.all;
     this.updateAllCheck(this.all);
+    this.save();
+  }
+  /**
+   * 切换批量操作
+   */
+  toggleBatch () {
+    this.batch = !this.batch;
+    if (this.batch) {
+      this.unselectAll();
+    } else {
+      this.selectAll();
+    }
+    this.save();
   }
 
   // #############################
@@ -181,6 +211,7 @@ export default class Cart {
    * 计算价格和数量
    */
   cpomuteCart () {
+    // 价格计算
     let all = this.carts.length > 0;
     let price = 0;
     let num = 0;
@@ -194,10 +225,29 @@ export default class Cart {
       price += cart.goodsPrice * cart.goodsNum;
     }
     price = price.toFixed(2);
-
     this.all = all;
     this.num = num;
     this.price = price;
+    // 购物车为空的情况处理
+    if (this.carts.length == 0) {
+      this.batch = false;
+    }
+  }
+
+  /**
+   * 选择全部
+   */
+  selectAll () {
+    this.all = true;
+    this.updateAllCheck(this.all);
+  }
+
+  /**
+   * 取消选择全部
+   */
+  unselectAll () {
+    this.all = false;
+    this.updateAllCheck(this.all);
   }
   /**
    * 根据商品信息查找
@@ -216,18 +266,6 @@ export default class Cart {
   }
 
   /**
-   * 切换批量操作
-   */
-  toggleBatch () {
-    this.batch = !this.batch;
-    if (this.batch) {
-      this.unselectAll();
-    } else {
-      this.selectAll();
-    }
-  }
-
-  /**
    * 检查库存
    */
   checkGoodsStock () {
@@ -239,42 +277,5 @@ export default class Cart {
     } else {
       return `${goods.goodsName} 库存不足`;
     }
-  }
-
-  /**
-   * 切换全部商品的选择
-   */
-  // toggleAllCheck () {
-  //   this.all = !this.all;
-  //   this.updateAllSeleteStatus(this.all);
-  // }
-
-  /**
-   * 选择全部
-   */
-  selectAll () {
-    this.all = true;
-    this.updateAllSeleteStatus(this.all);
-  }
-
-  /**
-   * 取消选择全部
-   */
-  unselectAll () {
-    this.all = false;
-    this.updateAllSeleteStatus(this.all);
-  }
-
-  /**
-   * 移除一个购物车项目
-   */
-  remveCart (cartId) {
-    for (let i in this.carts) {
-      const cart = this.carts[i];
-      if (cart.cartId == cartId) {
-        this.carts.splice(i, 1);
-      }
-    }
-    this._setTotalNumAndPrice();
   }
 }
