@@ -147,6 +147,37 @@ export default class Cart {
     this.save();
   }
   /**
+   * 切换一个商品的选择
+   */
+  toggleCartCheck(index) {
+    const cart = this.carts[index];
+    if (cart) {
+      cart.check = !cart.check;
+    }
+    this.save();
+  }
+
+  /**
+   * 切换全部商品的选择
+   */
+  toggleAllCheck () {
+    this.all = !this.all;
+    this.updateAllCheck(this.all);
+  }
+
+  // #############################
+  // 工具方法
+  // #############################
+  /**
+   * 切换全部选择
+   */
+  updateAllCheck (check) {
+    this.carts.forEach(cart => {
+      cart.check = check;
+    });
+    this.save();
+  }
+  /**
    * 计算价格和数量
    */
   cpomuteCart () {
@@ -185,26 +216,13 @@ export default class Cart {
   }
 
   /**
-   * 切换一个商品的选择
-   */
-  toggleCartCheck (cartId) {
-    this.carts.forEach(cart => {
-      if (cart.cartId == cartId) {
-        cart.check = !cart.check;
-      }
-    });
-    this._setTotalNumAndPrice();
-  }
-
-  /**
    * 切换批量操作
    */
   toggleBatch () {
     this.batch = !this.batch;
     if (this.batch) {
       this.unselectAll();
-    }
-    else {
+    } else {
       this.selectAll();
     }
   }
@@ -226,10 +244,10 @@ export default class Cart {
   /**
    * 切换全部商品的选择
    */
-  toggleAllCheck () {
-    this.all = !this.all;
-    this.updateAllSeleteStatus(this.all);
-  }
+  // toggleAllCheck () {
+  //   this.all = !this.all;
+  //   this.updateAllSeleteStatus(this.all);
+  // }
 
   /**
    * 选择全部
@@ -246,18 +264,6 @@ export default class Cart {
     this.all = false;
     this.updateAllSeleteStatus(this.all);
   }
-
-  /**
-   * 更新全部选择状态
-   */
-  updateAllSeleteStatus (check) {
-    this.carts.forEach(cart => {
-      cart.check = check;
-    });
-    this._setTotalNumAndPrice();
-  }
-
-
 
   /**
    * 移除一个购物车项目

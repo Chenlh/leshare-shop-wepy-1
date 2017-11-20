@@ -3,7 +3,7 @@
     <view class="cart-item-container"  data-cart-id="{{cart.cartId}}" data-goods-name="{{cart.goodsName}}" catchlongtap="onCartLongTap" >
       <!--多选按钮-->
       <view class="cart-check-container">
-        <view class="zan-icon zan-icon-{{cart.check ? 'checked' : 'check'}}" data-cart-id="{{cart.cartId}}" catchtap="onCheckTap" />
+        <view class="zan-icon zan-icon-{{cart.check ? 'checked' : 'check'}}" @tap="check({{index}})" />
       </view>
 
       <!--商品图片-->
@@ -43,6 +43,9 @@
     methods = {
       num(event) {
         this.$emit('num', event);
+      },
+      check(index) {
+        this.$emit('check', index);
       }
     };
     components = {

@@ -3,7 +3,7 @@
     <view class="cart-header-container" wx:if="{{cart.carts.length > 0}}">
 
       <view class="cart-shop-info-container">
-        <view class="cart-check-container" catchtap="onCheckAllTap">
+        <view class="cart-check-container" @tap="checkAll">
           <view class="zan-icon zan-icon-{{cart.all ? 'checked' : 'check'}}" />
         </view>
         <image class="shop-info-icon" src="/images/icons/shop-gray.png" />
@@ -21,7 +21,8 @@
     <!--购物车内容-->
     <view class="item-list-container">
       <repeat for="{{cart.carts}}"  key="index" index="index" item="item">
-        <CartItem :cart.sync="item" :index.sync="index" @num.user="num"/>
+        <CartItem :cart.sync="item" :index.sync="index"
+                  @num.user="num" @check.user="check"/>
       </repeat>
 
     </view>
@@ -29,7 +30,7 @@
     <!--底栏-->
     <view class="cart-bar-container">
 
-      <view class="cart-check-all-container" catchtap="onCheckAllTap">
+      <view class="cart-check-all-container" @tap="checkAll">
         <view class="zan-icon zan-icon-{{cart.all ? 'checked' : 'check'}}" />
         <text>全选</text>
       </view>
@@ -84,6 +85,14 @@
       // 修改商品数量
       num({componentId, quantity}) {
         this.cartManager.updateNum(componentId, quantity);
+      },
+      // 选择商品
+      check(index) {
+        this.cartManager.toggleCartCheck(index);
+      },
+      // 全部选择
+      checkAll() {
+        this.cartManager.toggleAllCheck();
       }
     };
     computed = {
