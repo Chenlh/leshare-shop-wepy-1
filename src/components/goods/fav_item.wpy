@@ -1,5 +1,5 @@
 <template>
-  <view class="goods-fav-container" data-goods-id="{{goods.goodsId}}"  catchtap="onGoodsTap">
+  <view class="goods-fav-container" data-goods-id="{{goods.goodsId}}"  @tap="detail({{goods.goodsId}})">
     <!--商品图片-->
     <image class="goods-item-img" src="{{goods.imageUrl}}" />
 
@@ -23,8 +23,11 @@
       goods: {}
     };
     methods = {
+      detail(goodsId) {
+        this.$root.$navigate(`/pages/goods/detail?goodsId=${goodsId}`);
+      },
       tap(goodsId) {
-        Tips.actionWithFunc(['查看商品', '取消收藏'],
+        Tips.actionWithFunc(['查看商品', '删除记录'],
           () => {
             this.$root.$navigate(`/pages/goods/detail?goodsId=${goodsId}`);
           },

@@ -16,14 +16,14 @@
 <script>
   import wepy from 'wepy';
   import base from '../../mixins/base';
-  import favorite from '../../api/favorite';
+  import history from '../../api/history';
   import pagination from '../../mixins/pagination.wpy';
   import Placeholder from '../../components/common/placeholder';
   import Loadmore from '../../components/weui/loadmore';
   import FavoriteItem from '../../components/goods/fav_item';
   import Tips from '../../utils/Tips';
 
-  export default class GoodsFavorite extends wepy.page {
+  export default class GoodsHistory extends wepy.page {
     data = {
       init: true,
       page: {
@@ -32,13 +32,13 @@
       }
     };
     async onLoad () {
-      this.page = favorite.page();
+      this.page = history.page();
       await this.next();
     };
     methods = {
       async remove(goodsId) {
-        await Tips.confirm('确认删除该收藏？');
-        await favorite.remove(goodsId);
+        await Tips.confirm('确认删除该记录？');
+        await history.remove(goodsId);
         await Tips.success('删除成功');
         this.reload();
       }
@@ -50,7 +50,7 @@
     };
     mixins = [base, pagination];
     config = {
-      navigationBarTitleText: '我的收藏',
+      navigationBarTitleText: '访问记录',
       enablePullDownRefresh: true
     };
   }
