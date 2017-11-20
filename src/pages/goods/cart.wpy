@@ -22,7 +22,7 @@
     <view class="item-list-container">
       <repeat for="{{cart.carts}}"  key="index" index="index" item="item">
         <CartItem :cart.sync="item" :index.sync="index"
-                  @num.user="num" @check.user="check"/>
+                  @num.user="num" @check.user="check" @remove.user="remove"/>
       </repeat>
 
     </view>
@@ -69,6 +69,7 @@
   import Cart from '../../utils/Cart';
   import CartItem from '../../components/goods/cart';
   import Cache from '../../utils/Cache';
+  import Tips from '../../utils/Tips';
 
   export default class GoodsCart extends wepy.page {
     def = {
@@ -98,9 +99,18 @@
       batch() {
         this.cartManager.toggleBatch();
       },
+      async remove(index) {
+        await Tips.confirm('确认删除该商品？');
+        this.cartManager.remove(index);
+        await Tips.success('删除成功');
+        this.$apply();
+      },
       // 批量删除
-      batchRemove() {
+      async batchRemove() {
+        await Tips.confirm('确认删除选中商品？');
         this.cartManager.removeChecked();
+        await Tips.success('删除成功');
+        this.$apply();
       }
     };
     computed = {

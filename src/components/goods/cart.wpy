@@ -1,13 +1,12 @@
 <template>
-  <view class="cart-item-wrap" style="{{txtStyle}}"  data-index="{{index}}" bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE">
-    <view class="cart-item-container"  data-cart-id="{{cart.cartId}}" data-goods-name="{{cart.goodsName}}" catchlongtap="onCartLongTap" >
+  <view class="cart-item-wrap" style="{{txtStyle[index]}}"  data-index="{{index}}" bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE">
+    <view class="cart-item-container" catchlongtap="remove({{index}})" >
       <!--多选按钮-->
       <view class="cart-check-container">
         <view class="zan-icon zan-icon-{{cart.check ? 'checked' : 'check'}}" @tap="check({{index}})" />
       </view>
-
       <!--商品图片-->
-      <image class="cart-item-image" src="{{cart.goodsImage}}" data-goods-id="{{cart.goodsId}}" catchtap="onCartTap" />
+      <image class="cart-item-image" src="{{cart.goodsImage}}"  @tap="detail({{cart.goodsId}})" />
 
       <!--商品说明-->
       <view class="cart-info-container">
@@ -25,7 +24,7 @@
         </view>
       </view>
     </view>
-    <view class="cart-item-delete"  data-cart-id="{{cart.cartId}}" data-goods-name="{{cart.goodsName}}"  catchtap="onCartLongTap">
+    <view class="cart-item-delete"  @tap="remove({{index}})">
       <text>删除</text>
     </view>
   </view>
@@ -34,18 +33,72 @@
 <script>
   import wepy from 'wepy';
   import ZanQuantity from '../../components/zanui/quantity';
+
   export default class CartItem extends wepy.component {
     props = {
       cart: {},
       index: {}
     };
-    data = {};
+    data = {
+      txtStyle: [],
+      startX: 0,
+      delBtnWidth: 60
+    };
     methods = {
-      num(event) {
+      num (event) {
         this.$emit('num', event);
       },
-      check(index) {
+      check (index) {
         this.$emit('check', index);
+      },
+      remove (index) {
+        this.$emit('remove', index);
+      },
+      detail (goodsId) {
+        this.$root.$navigate(`detail?goodsId=${goodsId}`);
+      },
+      touchS(e) {
+        if (e.touches.length == 1) {
+          this.startX = e.touches[0].clientX;
+        }
+      },
+      // TODO 组件化容器
+      touchM(e) {
+        if (e.touches.length == 1) {
+          // 手指移动时水平方向位置
+          let moveX = e.touches[0].clientX;
+          // 手指起始点位置与移动期间的差值
+          let disX = this.startX - moveX - 30;
+          let delBtnWidth = this.delBtnWidth;
+          let txtStyle = '';
+          if (disX == 0 || disX < 0) {
+            // 如果移动距离小于等于0，文本层位置不变
+            txtStyle = 'left:0px';
+          } else if (disX > 0) {
+            // 移动距离大于0，文本层left值等于手指移动距离
+            txtStyle = 'left:-' + disX + 'px';
+            if (disX >= delBtnWidth) {
+              // 控制手指移动距离最大值为删除按钮的宽度
+              txtStyle = 'left:-' + delBtnWidth + 'px';
+            }
+          }
+          // 获取手指触摸的是哪一项
+          this.txtStyle[this.index] = txtStyle;
+        }
+      },
+      // TODO 组件化容器
+      touchE(e) {
+        if (e.changedTouches.length == 1) {
+          // 手指移动结束后水平位置
+          let endX = e.changedTouches[0].clientX;
+          // 触摸开始与结束，手指移动的距离
+          let disX = this.startX - endX - 30;
+          let delBtnWidth = this.delBtnWidth;
+          // 如果距离小于删除按钮的1/2，不显示删除按钮
+          let txtStyle = disX > delBtnWidth / 2 ? 'left:-' + delBtnWidth + 'px' : 'left:0px';
+          // 获取手指触摸的是哪一项
+          this.txtStyle[this.index] = txtStyle;
+        }
       }
     };
     components = {
