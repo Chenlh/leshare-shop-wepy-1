@@ -76,6 +76,7 @@ export default class extends wepy.app {
       'pages/shop/index',
       'pages/home/home',
       'pages/goods/detail',
+      'pages/goods/cart',
       'pages/order/trade',
       'pages/order/list',
       'pages/order/detail',
@@ -97,12 +98,12 @@ export default class extends wepy.app {
           'iconPath': 'images/tab/home.png',
           'selectedIconPath': 'images/tab/home-active.png',
           'pagePath': 'pages/shop/index',
-          'text': '店铺'
+          'text': '首页'
         },
         {
           'iconPath': 'images/tab/cart.png',
           'selectedIconPath': 'images/tab/cart-active.png',
-          'pagePath': 'pages/home/home',
+          'pagePath': 'pages/goods/cart',
           'text': '购物车'
         },
         {

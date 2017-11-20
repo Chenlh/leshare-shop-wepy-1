@@ -34,8 +34,49 @@
       quantity: {}
     };
     data = {};
-    methods = {};
-    events = {};
+    methods = {
+      _handleZanQuantityMinus(e) {
+        this.handle(e, -1);
+      },
+      _handleZanQuantityPlus(e) {
+        this.handle(e, +1);
+      },
+      _handleZanQuantityBlur(e) {
+        const dataset = e.currentTarget.dataset;
+        const componentId = dataset.componentId;
+        const max = +dataset.max;
+        const min = +dataset.min;
+        let value = e.detail.value;
+        if (!value) {
+          setTimeout(() => {
+            this.callback(componentId, min);
+          }, 16);
+          this.callback(componentId, value);
+          return '' + value;
+        }
+        value = +value;
+        if (value > max) {
+          value = max;
+        } else if (value < min) {
+          value = min;
+        }
+        this.callback(componentId, value);
+        return '' + value;
+      }
+    };
+    handle(e, num) {
+      const dataset = e.currentTarget.dataset;
+      const componentId = dataset.componentId;
+      const disabled = dataset.disabled;
+      const quantity = +dataset.quantity;
+      if (disabled) return null;
+      this.callback(componentId, quantity + num);
+    }
+    callback(componentId, quantity) {
+      quantity = +quantity;
+      const e = { componentId, quantity };
+      this.$emit('change', e);
+    }
     onLoad() {
     }
   }

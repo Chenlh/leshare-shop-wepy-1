@@ -22,9 +22,9 @@
 
     <!--购物规格面板 / TODO 信息整理-->
     <GoodsPanel  :goods.sync="goods" :sku.sync="sku" :status.sync="status"
-                 @select.user="selectSku" @close.user="closeSku"/>
+                 @select.user="selectSku" @close.user="closeSku" @num.user="changeSkuNum" @confirm.user="confirm"/>
   </view>
-</template>
+</template>=
 
 <script>
   import wepy from 'wepy';
@@ -33,6 +33,7 @@
   import Cache from '../../utils/Cache';
   import comment from '../../api/comment';
   import Sku from '../../utils/Sku';
+  import Cart from '../../utils/Cart';
   import GoodsInfo from '../../components/goods/info';
   import GoodsSku from '../../components/goods/sku';
   import GoodsCoupon from '../../components/goods/coupon';
@@ -53,15 +54,22 @@
       comment: null,
       fav: false,
       num: 0
-    }
+    };
     skuManager = null;
+    cartManager = Cart.create();
     data = {...this.def};
     async onLoad ({goodsId}) {
-      this.goods = await goods.getInfo(goodsId);
+      // 商品信息
+      this.goods = await goods.getInfo(goodsId)
+      // SKU信息
       this.skuManager = new Sku(this.goods);
+      // 店铺信息
       this.shop = await Cache.shop();
+      // 优惠券
       this.shelf = await Cache.coupon();
+      // 店铺状态
       this.status = await Cache.status();
+      // 商品评论
       this.comment = await comment.count(goodsId);
       this.loaded();
     };
@@ -82,6 +90,18 @@
       // 关闭SKU
       closeSku() {
         this.skuManager.display = false;
+      },
+      // 改变SKU数量
+      changeSkuNum(num) {
+        this.skuManager.setNum(num);
+      },
+      // 确认选择
+      confirm(type) {
+        // TODO 检查SKU库存情况
+        // TODO 联网检查库存
+        // 增加到购物车
+        const {skuText, num} = this.sku;
+        this.cartManager.add(this.goods, skuText, num);
       }
     };
     computed = {
@@ -107,7 +127,7 @@
           fav: false
         }
       }
-    }
+    };
     events = {};
     components = {
       GoodsInfo: GoodsInfo,

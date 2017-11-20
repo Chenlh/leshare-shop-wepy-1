@@ -1,0 +1,33 @@
+<template>
+</template>
+
+<style lang="scss">
+  @import "../../styles/variable";
+</style>
+
+<script>
+  import wepy from 'wepy';
+  import base from '../../mixins/base';
+  import Cart from '../../utils/Cart';
+
+  export default class GoodsCart extends wepy.page {
+    def = {};
+    data = {...this.def};
+    cartManager = Cart.create();
+    onLoad (options) {
+    };
+    computed = {
+      cart() {
+        if (this.cartManager === null) {
+          return;
+        }
+        return this.cartManager.export();
+      }
+    };
+    components = {};
+    mixins = [base];
+    config = {
+      navigationBarTitleText: '订单详情'
+    };
+  }
+</script>

@@ -44,15 +44,15 @@
       </view>
 
       <view class="buy-panel-num-selector">
-        <ZanQuantity :quantity.sync="quantity"/>
+        <ZanQuantity :quantity.sync="quantity" @change.user="num"/>
       </view>
     </view>
 
     <block wx:if="{{status.open}}">
-      <view class="buy-panel-next {{sku.next ? '' : 'buy-panel-empty'}}" catchtap="onConfirmBuyTap" wx:if="{{sku.action =='buy'}}">
+      <view class="buy-panel-next {{sku.next ? '' : 'buy-panel-empty'}}" @tab="confirm('buy')" wx:if="{{sku.action =='buy'}}">
         <text>下一步</text>
       </view>
-      <view class="buy-panel-next {{sku.next ? '' : 'buy-panel-empty'}}" catchtap="onConfirmCartTap" wx:if="{{sku.action =='cart'}}">
+      <view class="buy-panel-next {{sku.next ? '' : 'buy-panel-empty'}}" @tap="confirm('cart')" wx:if="{{sku.action =='cart'}}">
         <text>确定</text>
       </view>
     </block>
@@ -84,6 +84,12 @@
           return;
         }
         this.$emit('select', key, value);
+      },
+      num({quantity}) {
+        this.$emit('num', quantity);
+      },
+      confirm(type) {
+        this.$emit('confirm', type);
       }
     };
     computed = {
@@ -98,7 +104,7 @@
           }
         }
       }
-    }
+    };
     components = {
       ZanQuantity: ZanQuantity
     };
