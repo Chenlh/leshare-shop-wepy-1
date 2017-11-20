@@ -8,7 +8,7 @@
 
     <view class="gap-v"></view>
 
-    <view class="bar-action-container" catchtap="onToCartTap">
+    <view class="bar-action-container" @tap="cart">
       <view class="zan-badge">
         <image class="icon" src="/images/icons/cart-gray.png" />
         <!--TODO 重构为WEUI 样式-->
@@ -46,11 +46,11 @@
     methods = {
       buy(type) {
         this.$emit('buy', type);
+      },
+      cart() {
+        this.$root.$switch('/pages/goods/cart');
       }
     };
-    events = {};
-    onLoad() {
-    }
   }
 </script>
 

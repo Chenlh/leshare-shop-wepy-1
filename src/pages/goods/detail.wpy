@@ -24,7 +24,7 @@
     <GoodsPanel  :goods.sync="goods" :sku.sync="sku" :status.sync="status"
                  @select.user="selectSku" @close.user="closeSku" @num.user="changeSkuNum" @confirm.user="confirm"/>
   </view>
-</template>=
+</template>
 
 <script>
   import wepy from 'wepy';
@@ -41,7 +41,7 @@
   import GoodsDetail from '../../components/goods/detail';
   import GoodsBar from '../../components/goods/buy-bar';
   import GoodsPanel from '../../components/goods/buy-panel';
-  // import Tips from '../../utils/Tips';
+  import Tips from '../../utils/Tips';
 
   export default class GoodsIndex extends wepy.page {
     def = {
@@ -52,8 +52,7 @@
       shelf: null,
       status: null,
       comment: null,
-      fav: false,
-      num: 0
+      fav: false
     };
     skuManager = null;
     cartManager = Cart.create();
@@ -100,30 +99,29 @@
         // TODO 检查SKU库存情况
         // TODO 联网检查库存
         // 增加到购物车
-        const {skuText, num} = this.sku;
-        this.cartManager.add(this.goods, skuText, num);
+        if (type == 'cart') {
+          const {skuText, num} = this.sku;
+          this.cartManager.add(this.goods, skuText, num);
+          Tips.success('添加成功');
+        }
+        // 关闭面板
+        this.skuManager.display = false;
       }
     };
     computed = {
       sku() {
-        if (this.skuManager == null) {
-          return;
-        }
+        if (this.skuManager == null) return;
         return this.skuManager.export();
       },
       skuPanelDisplay() {
-        if (this.skuManager == null) {
-          return;
-        }
+        if (this.skuManager == null) return;
         return this.skuManager.display;
       },
       bar() {
-        if (!this.init) {
-          return;
-        }
+        if (!this.init || this.cartManager == null) return;
         return {
           status: this.status.open,
-          num: 0,
+          num: this.cartManager.num,
           fav: false
         }
       }
