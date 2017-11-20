@@ -34,6 +34,15 @@ export default class Cart {
    * 导出数据
    */
   export () {
+    // 增加计数器对象
+    this.carts.forEach((cart, index) => {
+      cart.quantity = {
+        componentId: index,
+        num: cart.goodsNum,
+        min: 1,
+        max: 99
+      };
+    });
     return {
       carts: this.carts,
       price: this.price,
@@ -125,6 +134,16 @@ export default class Cart {
       });
     }
     // 保存
+    this.save();
+  }
+  /**
+   * 更新商品数量
+   */
+  updateNum (index, num) {
+    const cart = this.carts[index];
+    if (cart) {
+      cart.goodsNum = num;
+    }
     this.save();
   }
   /**
@@ -238,17 +257,7 @@ export default class Cart {
     this._setTotalNumAndPrice();
   }
 
-  /**
-   * 更新商品数量
-   */
-  updateCartNum (cartId, num) {
-    this.carts.forEach(cart => {
-      if (cart.cartId == cartId) {
-        cart.goodsNum = num;
-      }
-    });
-    this._setTotalNumAndPrice();
-  }
+
 
   /**
    * 移除一个购物车项目
