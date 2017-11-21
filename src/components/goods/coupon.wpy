@@ -26,7 +26,7 @@
       <view class="coupon-pick-list" wx:if="{{shelf.pickList.length > 0}}">
         <text class="coupon-pick-title">可领优惠券</text>
         <repeat for="{{shelf.pickList}}" key="index" index="index" item="item">
-          <CouponPick :coupon.sync="item" />
+          <CouponPick :coupon.sync="item" @pick.user="pick"/>
         </repeat>
       </view>
       <view class="coupon-pick-list" wx:if="{{shelf.ownList.length > 0}}">
@@ -56,12 +56,15 @@
       },
       close() {
         this.display = false;
+      },
+      pick(couponId) {
+        this.$emit('pick', couponId);
       }
     };
     components = {
       CouponItem: CouponItem,
       CouponPick: CouponPick
-    }
+    };
     onLoad() {
     }
   }

@@ -8,7 +8,7 @@
       <!--SKU栏-->
       <GoodsSku :sku.sync="sku" @tap.user="buy"/>
       <!--领券栏-->
-      <GoodsCoupon :shelf.sync="shelf" />
+      <GoodsCoupon :shelf.sync="shelf" @pick.user="pick" />
       <!--评价栏-->
       <GoodsComment :comment.sync="comment" />
     </view>
@@ -30,6 +30,7 @@
 <script>
   import wepy from 'wepy';
   import goods from '../../api/goods';
+  import coupon from '../../api/coupon';
   import base from '../../mixins/base';
   import Cache from '../../utils/Cache';
   import comment from '../../api/comment';
@@ -123,6 +124,23 @@
         }
         // 关闭面板
         this.skuManager.display = false;
+      },
+      // 领取优惠券
+      async pick(couponId) {
+        try {
+          await coupon.pick(couponId);
+          await Tips.success('领取成功');
+          // 重新加载
+          this.shelf = await Cache.coupon(true);
+          this.loaded();
+        } catch (e) {
+          if (e.serverCode == '50001') {
+            await Tips.alert('已达领取上限');
+            const index = this.coupons.findIndex(item => item.id == couponId);
+            this.coupons.splice(index, 1);
+            this.loaded();
+          }
+        }
       }
     };
     computed = {
