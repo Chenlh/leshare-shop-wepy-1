@@ -17,7 +17,7 @@
       <view class="goods-item-price">
         <text class="goods-item-price-cost">￥{{goods.priceLable}}</text>
       </view>
-      <image class="cart-image" catchtap='onAddCartTap' data-goods-id="{{id}}"  src="/images/icons/cart-btn.png" />
+      <image class="cart-image" @tap.stop="cart({{goods.id}})" src="/images/icons/cart-btn.png" />
     </view>
   </view>
 </template>
@@ -31,6 +31,9 @@
     methods = {
       detail(goodsId) {
         this.$root.$navigate(`/pages/goods/detail?goodsId=${goodsId}`);
+      },
+      cart(goodsId) {
+        this.$emit('cart', goodsId);
       }
     };
     events = {};

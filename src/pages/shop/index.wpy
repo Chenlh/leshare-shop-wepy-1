@@ -9,7 +9,7 @@
     <view class="goods-grid-box row-between">
       <!--列表展现-->
       <repeat for="{{page.list}}" key="index" index="index" item="item">
-        <GoodsItem :goods.sync="item" />
+        <GoodsItem :goods.sync="item" @cart.user="cart" />
       </repeat>
     </view>
 
@@ -17,6 +17,10 @@
     <Loadmore :page.sync="page"/>
 
   </view>
+
+  <!--购物规格面板 / TODO 信息整理-->
+  <GoodsPanel  :goods.sync="goods" :sku.sync="sku" :status.sync="status"
+               @select.user="selectSku" @close.user="closeSku" @num.user="changeSkuNum" @confirm.user="confirm"/>
 
   <!--占位符-->
   <Placeholder :show.sync="isPageEmpty" message="您还没有相关公告信息"/>
@@ -35,22 +39,30 @@
   import ShopHeader from '../../components/shop/header';
   import ShopNav from '../../components/shop/nav';
   import GoodsItem from '../../components/goods/item';
+  import GoodsPanel from '../../components/goods/buy-panel';
+  import Sku from '../../utils/Sku';
+  import Cart from '../../utils/Cart';
+  import Tips from '../../utils/Tips';
 
   export default class ShopIndex extends wepy.page {
-    def = {
+    data = {
       init: false,
       shop: null,
       page: {
         list: [
         ]
-      }
+      },
+      status: null,
+      goods: null
     };
-    data = {...this.def};
+    skuManager = null;
+    cartManager = Cart.create();
     async onLoad (options) {
       // -- 用户信息
       await auth.user();
       this.shop = await Cache.shop();
       this.shop.notices = await Cache.notices();
+      this.status = await  Cache.status();
       this.page = goods.page();
       await this.next();
       Event.listen(Event.NOTICE_LIST_UPDATE, this.update.bind(this), this);
@@ -59,17 +71,50 @@
       return {};
     }
     methods = {
-      switchTab() {
-        this.reload();
+      cart(goodsId) {
+        this.goods = this.page.list.find(item => item.id == goodsId);
+        this.skuManager = new Sku(this.goods);
+        this.skuManager.action = 'cart';
+        this.skuManager.display = true;
+      },
+      // 选择SKU
+      selectSku(key, value) {
+        this.skuManager.select(key, value);
+      },
+      // 关闭SKU
+      closeSku() {
+        this.goods = null;
+        this.skuManager.display = false;
+      },
+      // 改变SKU数量
+      changeSkuNum(num) {
+        this.skuManager.setNum(num);
+      },
+      // 确认选择
+      confirm(type) {
+        // 增加到购物车
+        if (type == 'cart') {
+          const {skuText, num} = this.sku;
+          this.cartManager.add(this.goods, skuText, num);
+          Tips.success('添加成功');
+        }
+        // 关闭面板
+        this.skuManager.display = false;
       }
     };
-    events = {};
+    computed = {
+      sku() {
+        if (this.skuManager == null) return;
+        return this.skuManager.export();
+      },
+    };
     components = {
       Placeholder: Placeholder,
       Loadmore: Loadmore,
       ShopNav: ShopNav,
       ShopHeader: ShopHeader,
-      GoodsItem: GoodsItem
+      GoodsItem: GoodsItem,
+      GoodsPanel: GoodsPanel
     };
     mixins = [base, pagination];
     config = {

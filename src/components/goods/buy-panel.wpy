@@ -155,7 +155,9 @@
     background-color: white;
     top: -20rpx;
     height: 170rpx;
+    min-height:170rpx;
     width: 170rpx;
+    min-width: 170rpx;
     border-radius: 5px;
     border: 1px solid #E2E2E2;
   }
@@ -167,6 +169,10 @@
     flex-direction: column;
     padding-left: 30rpx;
     padding-top: 28rpx;
+    text-overflow: ellipsis;
+    word-break:keep-all;/* 不换行 */
+    white-space:nowrap;/* 不换行 */
+    overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
   }
 
   /*商品标题*/
