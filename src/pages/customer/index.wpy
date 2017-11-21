@@ -29,7 +29,7 @@
         </view>
         <view class="zan-cell__ft"></view>
       </navigator>
-      <navigator class="zan-cell zan-cell--access" url="/pages/coupon/index/index">
+      <navigator class="zan-cell zan-cell--access" url="/pages/coupon/list">
         <view class="zan-cell__bd">
           <image src="/images/icons/cuppon.png" />
           <text>优惠券</text>

@@ -87,7 +87,9 @@ export default class extends wepy.app {
       'pages/customer/index',
       'pages/customer/address_edit',
       'pages/customer/address_list',
-      'pages/customer/address_search'
+      'pages/customer/address_search',
+      'pages/coupon/list',
+      'pages/coupon/detail'
     ],
     window: {
       backgroundTextStyle: 'dark',

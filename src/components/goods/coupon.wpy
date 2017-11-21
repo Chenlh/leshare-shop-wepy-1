@@ -41,8 +41,8 @@
 
 <script>
   import wepy from 'wepy';
-  import CouponItem from '../../components/coupon/item';
-  import CouponPick from '../../components/coupon/pick_item';
+  import CouponItem from '../coupons/item';
+  import CouponPick from '../coupons/pick_item';
   export default class OrderGoods extends wepy.component {
     props = {
       shelf: {}
