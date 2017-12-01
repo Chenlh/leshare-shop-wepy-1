@@ -1,0 +1,55 @@
+<template>
+    <!-- 店铺信息区域 -->
+    <view class="shop-box row-between" url="/pages/home/home" @tap="home">
+      <view class="row">
+        <image class="shop-avatar" src="{{shop.avatar}}/medium" wx:if="{{shop.avatar}}"/>
+        <view class="shop-content column">
+          <text class="xl">{{shop.name}}</text>
+          <text class="xxs inline">{{shop.address}}</text>
+        </view>
+      </view>
+      <image class="icon" src="/images/icons/more-white.png"/>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import WxUtils from '../../utils/WxUtils';
+
+  export default class ShopHeader extends wepy.component {
+    props = {
+      shop: {}
+    };
+    methods = {
+      home () {
+        WxUtils.backOrRedirect('/pages/home/home');
+      }
+    };
+  }
+</script>
+
+<style lang="scss">
+  @import "../../styles/variable";
+
+  // 店铺信息
+  .shop-box {
+    position: relative;
+    padding: 10px;
+    text {
+      color: #FFF
+    }
+    background-color: $color-primary;
+
+    .shop-avatar {
+      height: 40px;
+      width: 40px;
+      border-radius: 3px;
+    }
+
+    .shop-content {
+      flex: 1;
+      justify-content: flex-start;
+      margin-left: 15px;
+    }
+  }
+</style>

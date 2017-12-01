@@ -36,7 +36,7 @@
   import Event from '../../utils/Event';
   import Loadmore from '../../components/weui/loadmore';
   import Cache from '../../utils/Cache';
-  import ShopHeader from '../../components/shop/header';
+  import ShopHeader from '../../components/shop/header-mini';
   import ShopNav from '../../components/shop/nav';
   import GoodsItem from '../../components/goods/item';
   import GoodsPanel from '../../components/goods/buy-panel';
