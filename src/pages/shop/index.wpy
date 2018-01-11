@@ -3,8 +3,52 @@
     <!-- 店铺信息区域 -->
     <ShopHeader :shop.sync="shop" />
 
-    <!--功能区域-->
-    <ShopNav badegText="商城" title="在线商城"  navText="个人中心" navUrl="/pages/customer/index" />
+    <!--TAB 页-->
+    <ZanTab :tab.sync="tab" @change.user="switchTab" fixed="false" />
+
+    <!--横向图片类别导航-->
+    <view class="window-box row">
+      <view class="column-center">
+        <image class="item-img" src="/images/temp/category/cz.jpg"/>
+        <text>抽纸</text>
+      </view>
+      <view class="item-vr"></view>
+      <view class="column-center">
+        <image class="item-img" src="/images/temp/category/jz.jpg"/>
+        <text>卷纸</text>
+      </view>
+      <view class="item-vr"></view>
+      <view class="column-center">
+        <image class="item-img" src="/images/temp/category/wsj.jpg"/>
+        <text>卫生巾</text>
+      </view>
+      <view class="item-vr"></view>
+      <view class="column-center">
+        <image class="item-img" src="/images/temp/category/ycx.jpg"/>
+        <text>一次性用品</text>
+      </view>
+
+    </view>
+
+    <!--套装大图展现-->
+    <view class="column-12-box column">
+      <view>
+        <text>掌柜推荐</text>
+      </view>
+      <view class="cell-big">
+        <image class="item-big" src="/images/temp/category/big-wsj.jpg"/>
+      </view>
+      <view class="row">
+        <view class="cell-small">
+          <image class="item-small" src="/images/temp/category/big-cz.jpg"/>
+        </view>
+        <view class="item-vr"></view>
+        <view class="cell-small">
+          <image class="item-small" src="/images/temp/category/big-jz.jpg"/>
+        </view>
+      </view>
+
+    </view>
 
     <view class="goods-grid-box row-between">
       <!--列表展现-->
@@ -40,6 +84,7 @@
   import ShopNav from '../../components/shop/nav';
   import GoodsItem from '../../components/goods/item';
   import GoodsPanel from '../../components/goods/buy-panel';
+  import ZanTab from '../../components/zanui/tab';
   import Sku from '../../utils/Sku';
   import Cart from '../../utils/Cart';
   import Tips from '../../utils/Tips';
@@ -52,6 +97,15 @@
         list: [
         ]
       },
+      tab: {
+        list: [
+          {id: 'HOME', title: '店铺首页'},
+          {id: 'RECOMMEND', title: '热销推荐'},
+          {id: 'NEW', title: '新品上架'},
+          {id: 'ALL', title: '全部宝贝'}
+        ],
+        selectedId: 'HOME'
+      },
       status: null,
       goods: null
     };
@@ -62,7 +116,7 @@
       await auth.user();
       this.shop = await Cache.shop();
       this.shop.notices = await Cache.notices();
-      this.status = await  Cache.status();
+      this.status = await Cache.status();
       this.page = goods.page();
       await this.next();
       Event.listen(Event.NOTICE_LIST_UPDATE, this.update.bind(this), this);
@@ -106,7 +160,7 @@
       sku() {
         if (this.skuManager == null) return;
         return this.skuManager.export();
-      },
+      }
     };
     components = {
       Placeholder: Placeholder,
@@ -114,7 +168,8 @@
       ShopNav: ShopNav,
       ShopHeader: ShopHeader,
       GoodsItem: GoodsItem,
-      GoodsPanel: GoodsPanel
+      GoodsPanel: GoodsPanel,
+      ZanTab: ZanTab
     };
     mixins = [base, pagination];
     config = {
@@ -126,7 +181,54 @@
 
 <style lang="scss">
   @import "../../styles/variable";
+  /*横向*/
+  .window-box{
+    padding: 10rpx 0;
+    background-color: white;
+    justify-content: space-around;
+    border-top: $border;
+    border-bottom: $border;
 
+    .item-img{
+      height: 70px;
+      width: 70px;
+    }
+    .item-vr{
+      background-color: #EDEDED;
+      width: 1px;
+      height: 60px;
+    }
+  }
+
+  /*纵向12布局*/
+  .column-12-box{
+    background-color: white;
+    border-top: $border;
+    border-bottom: $border;
+    .item-big{
+      width: 750rpx;
+      height: 750rpx;
+    }
+    .item-small{
+      width: 375rpx;
+      height: 375rpx;
+    }
+    .cell-big{
+      height: 750rpx;
+      width: 750rpx;
+      border-bottom: $border;
+    }
+    .cell-small{
+      height: 375rpx;
+      width: 375rpx;
+    }
+    .item-vr{
+      background-color: #EDEDED;
+      width: 1px;
+      height: 100%;
+    }
+
+  }
   .goods-grid-box{
     margin-top: 10rpx;
     flex-wrap: wrap;
